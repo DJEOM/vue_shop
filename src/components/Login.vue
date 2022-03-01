@@ -20,7 +20,7 @@ export default {};
     left: 50%;
     background-color: #fff;
     border-radius: 3px;
-    transform: translate(-50%, -50%);
+    // transform: translate(-50%, -50%);
   }
 }
 </style>
