@@ -1,11 +1,4 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Author: sueRimn
- * @Date: 2022-03-01 23:19:24
- * @LastEditors: sueRimn
- * @LastEditTime: 2022-03-02 01:41:49
--->
+
 <template>
   <div class="login_container">
     <div class="login_box">
@@ -15,19 +8,19 @@
       </div>
 
       <!--  表单区域-->
-      <el-form label-width="0px" class="login_form">
+      <el-form ref="loginRef" :model="LoginForm" :rules="loginRules" label-width="0px" class="login_form">
         <!-- 用户名 -->
-        <el-form-item>
-          <el-input></el-input>
+        <el-form-item prop="username">
+          <el-input v-model="LoginForm.username" prefix-icon="iconfont icon-user"></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item>
-          <el-input></el-input>
+        <el-form-item prop="password">
+          <el-input v-model="LoginForm.password" prefix-icon="iconfont icon-lock" type="password"></el-input>
         </el-form-item>
         <!-- 按钮区域 -->
-        <el-form-item class="btns">
-          <el-button type="primary">登录</el-button>
-          <el-button type="info">重置</el-button>
+        <el-form-item class="btn">
+          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="info" @click="resetLoginRef">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -35,7 +28,52 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      // 登录表单绑定数据对象
+      LoginForm:{
+        username: 'admin',
+        password: '123456'
+      },
+      // 登录表单验证规则
+      loginRules: {
+        // 验证用户名
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        // 验证密码
+        password: [
+          { required: true, message: '请输入登录密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    // 重置方法
+    resetLoginRef() {
+      this.$refs.loginRef.resetFields()
+    },
+    // 登录校验方法
+    login() {
+      this.$refs.loginRef.validate(async val=>{
+        if(!val) return;
+        // 获取数据data
+        const {data:res} = await this.$http.post('login', this.LoginForm)
+        if(res.meta.status !== 200) return this.$message.error('登录失败!')
+        this.$message.success('登录成功!')
+        // 1.将登录成功后的token 保存到客户端的 sessionStorage中
+        window.sessionStorage.setItem('token', res.data.token)
+        // 1.1项目中除了登录意外的其他API接口，必须登录后才能访问
+        // 1.2 token只在当前网页打开期间生效
+        // 2.通过编程式导航跳转到后台主页
+        this.$router.push('/home')
+      })
+    }
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -78,7 +116,7 @@ export default {};
   width: 100%;
   padding: 0 20px;
   box-sizing: border-box;
-  .btns {
+  .btn {
     display: flex;
     justify-content: end;
   }
