@@ -5,7 +5,7 @@
             <!-- 左侧 -->
             <div class="left">
                 <img src="../assets/heima.png" alt="">
-                <span>电商后台管理系统</span>
+                <span>后台管理系统</span>
             </div>
             <!-- 右侧 -->
         <el-button type="info" @click="logout">退出</el-button>
