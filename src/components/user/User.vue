@@ -41,7 +41,7 @@
             <!-- 编辑按钮 -->
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
             <!-- 删除按钮 -->
-            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserInfo(scope.row.id)"></el-button>
             <!-- 分配角色按钮 -->
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
@@ -266,6 +266,35 @@ export default {
         //请求成功，返回数据中用户信息
         this.editForm = res.data
         this.editDialog = true
+      },
+      // 根据id删除对应的用户信息
+      async removeUserInfo(id){
+        console.log(id);
+        // 弹框提示
+        const confirmResult = await this.$confirm(
+          '此操作将永久删除该用户, 是否继续?', 
+          '提示', 
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        // 取消删除，返回为cancel
+        .catch(err => err)
+        // console.log(confirmResult);
+        // 判断是否取消
+        if(confirmResult !== 'confirm'){
+          return this.$message.info('已取消删除!')
+        }
+        
+        // 发起请求，完成删除用户操作
+        const {data: res} = await this.$http.delete('users/' + id)
+        if(res.meta.status !== 200){
+          return this.$message.error('删除用户失败!')
+        } 
+        this.$message.success('删除成功!')
+        // 更新用户数据列表
+        this.getUserList()
       }
   },
 
