@@ -1,31 +1,40 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2022-03-01 23:03:19
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2022-03-04 23:31:07
+ */
 import Vue from "vue";
 import {
-    Button,
-    Form,
-    FormItem,
-    Input,
-    Message,
-    Container,
-    Header,
-    Aside,
-    Main,
-    Menu,
-    Submenu,
-    MenuItemGroup,
-    MenuItem,
-    Breadcrumb,
-    BreadcrumbItem,
-    Card,
-    Row,
-    Col,
-    Table,
-    TableColumn,
-    Switch,
-    Tooltip,
-    Pagination,
-    Dialog,
-    MessageBox,
-    Tag,
+  Button,
+  Form,
+  FormItem,
+  Input,
+  Message,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Menu,
+  Submenu,
+  MenuItemGroup,
+  MenuItem,
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  Row,
+  Col,
+  Table,
+  TableColumn,
+  Switch,
+  Tooltip,
+  Pagination,
+  Dialog,
+  MessageBox,
+  Tag,
+  Tree
 } from "element-ui";
 Vue.use(Button);
 Vue.use(Form);
@@ -51,6 +60,7 @@ Vue.use(Tooltip);
 Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.use(Tag);
+Vue.use(Tree);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox.confirm;
