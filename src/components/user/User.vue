@@ -77,6 +77,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="setRole(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -130,7 +131,7 @@
       </el-dialog>
 
       <!-- 编辑用户提示框 -->
-      <el-dialog title="修改用户信息" :visible.sync="editDialog" width="50%">
+      <el-dialog title="修改用户" :visible.sync="editDialog" width="50%">
         <!-- 编辑内容主体区域 -->
         <el-form
           :model="editForm"
@@ -152,6 +153,24 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialog = false">取 消</el-button>
           <el-button type="primary" @click="editDialog = false"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
+
+      <!-- 分配角色的对话框 -->
+      <el-dialog
+        title="分配角色"
+        :visible.sync="setRoleDialogVisible"
+        width="50%"
+      >
+        <div>
+          <p>当前的用户: {{ userInfo.username }}</p>
+          <p>当前的角色: {{ userInfo.role_name }}</p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="setRoleDialogVisible = false"
             >确 定</el-button
           >
         </span>
@@ -245,6 +264,10 @@ export default {
           { validator: checkPhone, trigger: "blur" },
         ],
       },
+      // 控制分配角色对话框的显示与隐藏
+      setRoleDialogVisible: false,
+      // 需要分配角色的用户信息
+      userInfo: {},
     };
   },
   created() {
@@ -349,6 +372,11 @@ export default {
       this.$message.success("删除用户成功!");
       // 更新用户数据列表
       this.getUserList();
+    },
+    // 显示分配角色对话框
+    setRole(userInfo) {
+      this.userInfo = userInfo;
+      this.setRoleDialogVisible = true;
     },
   },
 };
