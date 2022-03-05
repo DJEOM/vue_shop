@@ -19,9 +19,7 @@
       <!-- 角色列表区域 -->
       <el-table :data="rolelist" border stripe>
         <el-table-column type="expand">
-          <!-- 展开列 使用作用域插槽 -->
           <template slot-scope="scope">
-            <!-- 栅格系统的布局组件 -->
             <el-row
               :class="['bdbottom', i1 === 0 ? 'bdtop' : '', 'vcenter']"
               v-for="(item1, i1) in scope.row.children"
@@ -38,7 +36,6 @@
               </el-col>
               <!-- 渲染二级 三级权限 -->
               <el-col :span="19">
-                <!-- 通过for循环 嵌套渲染二级权限 -->
                 <el-row
                   :class="[i2 === 0 ? '' : 'bdtop', 'vcenter']"
                   v-for="(item2, i2) in item1.children"
@@ -67,7 +64,6 @@
                 </el-row>
               </el-col>
             </el-row>
-            <!-- <pre>{{ scope.row }}</pre> -->
           </template>
         </el-table-column>
         <!-- 索引列 -->
@@ -215,12 +211,12 @@ export default {
       setRightDialogVisible: false,
       // 所有权限的数据
       rightslist: [],
-      // 树形控件的属性绑定对象
+     
       treeProps: {
         label: 'authName',
         children: 'children'
       },
-      // 默认选中的节点id值数组
+      
       defKeys: [],
       // 当前即将分配的权限的角色id
       roleId: ''
@@ -239,7 +235,7 @@ export default {
       this.rolelist = res.data
       console.log(this.rolelist)
     },
-    // 监听添加用户对话框的关闭时间-对话框一关闭就触发事件，清空表单
+    // 关闭对话框
     addDialogClosed() {
       this.$refs.addFormRef.resetFields()
     },
@@ -247,7 +243,7 @@ export default {
     addRole() {
       this.$refs.addFormRef.validate(async (valid) => {
         if (!valid) return
-        // 发起添加用户的网络请求
+        
         const { data: res } = await this.$http.post('roles', this.addForm)
         if (res.meta.status !== 201) {
           return this.$message.error('添加角色失败')
@@ -308,13 +304,10 @@ export default {
           type: 'warning'
         }
       ).catch((err) => err)
-      // 如果用户确认删除，则返回值为字符串 confirm
-      // 如果用户取消删除，则返回值为字符串 cancel
-      // console.log(confirmResult)
       if (confirmResult !== 'confirm') {
         return this.$message.info('已取消删除')
       }
-      // 连接服务器对数据进行操作
+      
       const { data: res } = await this.$http.delete('roles/' + id)
       if (res.meta.status !== 200) {
         return this.$message.error('删除用户信息失败')
@@ -337,39 +330,38 @@ export default {
       if (confirmResult !== 'confirm') {
         return this.$message.info('取消了删除！')
       }
-      // 连接后台删除数据
+     
       const { data: res } = await this.$http.delete(
         `roles/${role.id}/rights/${rightId}`
       )
       if (res.meta.status !== 200) {
         return this.$message.error('删除权限失败')
       }
-      // 会重绘table，返回的是当前角色下最新的权限数据 所以不建议这个渲染
-      // this.getRolesList()  重新赋值 data就好 当前角色信息 重新赋值
+  
       role.children = res.data
     },
     // 展示 分配权限的对话框
     async showSetRightDialog(role) {
-      // 点击展开获取到id值 保存在data中以便后续使用
+    
       this.roleId = role.id
       // 获取所有权限的数据
       const { data: res } = await this.$http.get('rights/tree')
       if (res.meta.status !== 200) {
         return this.$message.error('获取权限数据失败')
       }
-      // 没有失败的话，就把返回来的数据保存在data中 供页面使用
+      
       this.rightslist = res.data
       // 递归获取三级节点
       this.getLeafKeys(role, this.defKeys)
       this.setRightDialogVisible = true
     },
-    // 通过递归的形式获取角色下所有三级权限所欲的id 并保存搭配defKeys数组中
+  
     getLeafKeys(node, arr) {
       // 判断是否为三级节点 不包含children属性。
       if (!node.children) {
         return arr.push(node.id)
       }
-      // 调用递归 循环当前node里面的所有数组。每循环一项获得一个字节点item，根据item再次调用函数
+      
       node.children.forEach((item) => this.getLeafKeys(item, arr))
     },
     // 监听分配权限对话框的关闭事件
