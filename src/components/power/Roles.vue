@@ -101,9 +101,9 @@
       <el-tree
         :data="rightslist"
         :props="treeProps"
-        show-checkbox
+        show-checkbox 
         node-key="id"
-        :default-expand-all="true"
+        default-expand-all
         :default-checked-keys="defKeys"
         ref="treeRef"
       ></el-tree>
@@ -127,11 +127,11 @@ export default {
       rightslist: [],
       //   树形控件中的数据
       treeProps: {
-        children: "children",
         label: "authName",
+        children: "children",
       },
       // 默认选中的节点ID值数组
-      defKeys: [105, 116],
+      defKeys: [],
       roleId: '',
     };
   },
@@ -217,11 +217,13 @@ export default {
       const keys = [
         ...this.$refs.treeRef.getCheckedKeys(),
         ...this.$refs.treeRef.getHalfCheckedKeys(),
-      ];
+      ];   
+      // console.log(keys);
       const idStr = keys.join(",");
       const { data: res } = await this.$http.post(
-        ` roles/${this.roleId}/rights`,
-        { rids: idStr }
+        `roles/${this.roleId}/rights`,
+        { rids: idStr },
+        console.log(res)
       );
       if (res.meta.status !== 200) {
         return this.$message.error("分配权限失败!");
