@@ -3,6 +3,7 @@ body,
 #app {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   height: 100%;
   min-width: 1366px;
 }
@@ -19,4 +20,10 @@ body,
 }
 .el-pagination {
   margin-top: 15px;
+}
+.el-cascader__dropdown {
+  height: 200px;
+}
+.el-cascader-panel {
+  height: 200px;
 }

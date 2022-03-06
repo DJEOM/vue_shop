@@ -184,15 +184,15 @@ export default {
       rolelist: [],
       addDialogVisible: false,
       // 添加用户的表单数据
-      addForm: { roleName: '', roleDesc: '' },
+      addForm: { roleName: "", roleDesc: "" },
       // 添加表单的验证规则对象
       addFormRules: {
         roleName: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' }
+          { required: true, message: "请输入角色名称", trigger: "blur" },
         ],
         roleDesc: [
-          { required: true, message: '请输入角色描述', trigger: 'blur' }
-        ]
+          { required: true, message: "请输入角色描述", trigger: "blur" },
+        ],
       },
       // 控制修改用户对话框的显示与隐藏
       editDialogVisible: false,
@@ -201,194 +201,193 @@ export default {
       // 修改角色验证规则
       editFormRules: {
         roleName: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' }
+          { required: true, message: "请输入角色名称", trigger: "blur" },
         ],
         roleDesc: [
-          { required: true, message: '请输入角色描述', trigger: 'blur' }
-        ]
+          { required: true, message: "请输入角色描述", trigger: "blur" },
+        ],
       },
       // 控制分配权限对话框的显示与隐藏
       setRightDialogVisible: false,
       // 所有权限的数据
       rightslist: [],
-     
+
       treeProps: {
-        label: 'authName',
-        children: 'children'
+        label: "authName",
+        children: "children",
       },
-      
+
       defKeys: [],
       // 当前即将分配的权限的角色id
-      roleId: ''
-    }
+      roleId: "",
+    };
   },
   created() {
-    this.getRolesList()
+    this.getRolesList();
   },
   methods: {
     //   获取所有角色的列表
     async getRolesList() {
-      const { data: res } = await this.$http.get('roles')
+      const { data: res } = await this.$http.get("roles");
       if (res.meta.status !== 200) {
-        return this.$message.error('获取角色列表失败')
+        return this.$message.error("获取角色列表失败");
       }
-      this.rolelist = res.data
-      console.log(this.rolelist)
+      this.rolelist = res.data;
+      console.log(this.rolelist);
     },
     // 关闭对话框
     addDialogClosed() {
-      this.$refs.addFormRef.resetFields()
+      this.$refs.addFormRef.resetFields();
     },
     // 点击按钮，添加新的角色
     addRole() {
       this.$refs.addFormRef.validate(async (valid) => {
-        if (!valid) return
-        
-        const { data: res } = await this.$http.post('roles', this.addForm)
+        if (!valid) return;
+
+        const { data: res } = await this.$http.post("roles", this.addForm);
         if (res.meta.status !== 201) {
-          return this.$message.error('添加角色失败')
+          return this.$message.error("添加角色失败");
         }
-        this.$message.success('添加角色成功')
+        this.$message.success("添加角色成功");
         // 隐藏添加角色的对话框
-        this.addDialogVisible = false
+        this.addDialogVisible = false;
         // 更新角色数据列表
-        this.getRolesList()
-      })
+        this.getRolesList();
+      });
     },
     // 展示编辑的对话框
     async showEditDialog(id) {
-      const { data: res } = await this.$http.get('roles/' + id)
+      const { data: res } = await this.$http.get("roles/" + id);
       if (res.meta.status !== 200) {
-        return this.$message.error('查询角色信息失败')
+        return this.$message.error("查询角色信息失败");
       }
-      this.editForm = res.data
-      this.editDialogVisible = true
+      this.editForm = res.data;
+      this.editDialogVisible = true;
     },
-    
+
     // 监听修改角色对话框的关闭事件
     editDialogClosed() {
-      this.$refs.editFormRef.resetFields()
+      this.$refs.editFormRef.resetFields();
     },
     // 点击确定修改角色
     editRoleInfo() {
       this.$refs.editFormRef.validate(async (valid) => {
-        if (!valid) return
+        if (!valid) return;
         // 发起修改角色信息的数据请求
         const { data: res } = await this.$http.put(
-          'roles/' + this.editForm.roleId,
+          "roles/" + this.editForm.roleId,
           {
             roleName: this.editForm.roleName,
-            roleDesc: this.editForm.roleDesc
+            roleDesc: this.editForm.roleDesc,
           }
-        )
+        );
         if (res.meta.status !== 200) {
-          return this.$message.error('修改角色信息失败')
+          return this.$message.error("修改角色信息失败");
         }
         // 关闭对话框
-        this.editDialogVisible = false
+        this.editDialogVisible = false;
         // 刷新数据列表
-        this.getRolesList()
+        this.getRolesList();
         // 提示修改成功
-        this.$message.success('更新用户信息成功')
-      })
+        this.$message.success("更新角色信息成功");
+      });
     },
-    // 根据id删除对应的用户信息
+    // 根据id删除对应的角色信息
     async removeRoleById(id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
-        '此操作将永久删除该角色, 是否继续?',
-        '提示',
+        "此操作将永久删除该角色, 是否继续?",
+        "提示",
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         }
-      ).catch((err) => err)
-      if (confirmResult !== 'confirm') {
-        return this.$message.info('已取消删除')
+      ).catch((err) => err);
+      if (confirmResult !== "confirm") {
+        return this.$message.info("已取消删除");
       }
-      
-      const { data: res } = await this.$http.delete('roles/' + id)
+
+      const { data: res } = await this.$http.delete("roles/" + id);
       if (res.meta.status !== 200) {
-        return this.$message.error('删除用户信息失败')
+        return this.$message.error("删除用户信息失败");
       }
-      this.$message.success('删除用户信息成功')
-      this.getUserList()
+      this.$message.success("删除用户信息成功");
+      this.getRolesList();
     },
     // 根据id删除对应的权限
     async removeRightById(role, rightId) {
       // 弹框提示用户是否要删除
       const confirmResult = await this.$confirm(
-        '此操作将永久删除该角色, 是否继续?',
-        '提示',
+        "此操作将永久删除该角色, 是否继续?",
+        "提示",
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         }
-      ).catch((err) => err)
-      if (confirmResult !== 'confirm') {
-        return this.$message.info('取消了删除！')
+      ).catch((err) => err);
+      if (confirmResult !== "confirm") {
+        return this.$message.info("取消了删除！");
       }
-     
+
       const { data: res } = await this.$http.delete(
         `roles/${role.id}/rights/${rightId}`
-      )
+      );
       if (res.meta.status !== 200) {
-        return this.$message.error('删除权限失败')
+        return this.$message.error("删除权限失败");
       }
-  
-      role.children = res.data
+
+      role.children = res.data;
     },
     // 展示 分配权限的对话框
     async showSetRightDialog(role) {
-    
-      this.roleId = role.id
+      this.roleId = role.id;
       // 获取所有权限的数据
-      const { data: res } = await this.$http.get('rights/tree')
+      const { data: res } = await this.$http.get("rights/tree");
       if (res.meta.status !== 200) {
-        return this.$message.error('获取权限数据失败')
+        return this.$message.error("获取权限数据失败");
       }
-      
-      this.rightslist = res.data
+
+      this.rightslist = res.data;
       // 递归获取三级节点
-      this.getLeafKeys(role, this.defKeys)
-      this.setRightDialogVisible = true
+      this.getLeafKeys(role, this.defKeys);
+      this.setRightDialogVisible = true;
     },
-  
+
     getLeafKeys(node, arr) {
       // 判断是否为三级节点 不包含children属性。
       if (!node.children) {
-        return arr.push(node.id)
+        return arr.push(node.id);
       }
-      
-      node.children.forEach((item) => this.getLeafKeys(item, arr))
+
+      node.children.forEach((item) => this.getLeafKeys(item, arr));
     },
     // 监听分配权限对话框的关闭事件
     setRightDialogClosed() {
-      this.defKeys = []
+      this.defKeys = [];
     },
     // 点击为角色分配权限
     async allotRights() {
       // 拿到所有的key
       const keys = [
         ...this.$refs.treeRef.getCheckedKeys(),
-        ...this.$refs.treeRef.getHalfCheckedKeys()
-      ]
-      const idStr = keys.join(',')
+        ...this.$refs.treeRef.getHalfCheckedKeys(),
+      ];
+      const idStr = keys.join(",");
       const { data: res } = await this.$http.post(
         `roles/${this.roleId}/rights`,
         { rids: idStr }
-      )
+      );
       if (res.meta.status !== 200) {
-        return this.$message.error('分配权限失败')
+        return this.$message.error("分配权限失败");
       }
-      this.$message.success('分配权限成功')
-      this.getRolesList()
-      this.setRightDialogVisible = false
-    }
-  }
-}
+      this.$message.success("分配权限成功");
+      this.getRolesList();
+      this.setRightDialogVisible = false;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
