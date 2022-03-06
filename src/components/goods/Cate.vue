@@ -144,7 +144,7 @@
 export default {
   data() {
     return {
-      // 查询条件
+      // 查询条件  
       queryInfo: {
         type: 3,
         pagenum: 1,
