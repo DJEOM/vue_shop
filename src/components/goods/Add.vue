@@ -30,6 +30,7 @@
         <!-- tab标签栏区域 -->
         <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px" label-position="top">
         <el-tabs v-model="activeIndex" :tab-position="'left'" :before-leave="beforeTabLeave" @tab-click="tabClicked">
+            <!-- tab0 -->
             <el-tab-pane label="基本信息" name="0">
                 <el-form-item label="商品名称" prop="goods_name">
                     <el-input v-model="addForm.goods_name"></el-input>
@@ -53,12 +54,35 @@
                     </el-cascader>
                 </el-form-item>
             </el-tab-pane>
+            <!-- tab1 -->
             <el-tab-pane label="商品参数" name="1">
                 <!-- 渲染表单的item项 -->
-                <el-form-item :label="item.attr_name" v-for="item in manyTableData" :key="item.attr_id"></el-form-item>
+                <el-form-item :label="item.attr_name" v-for="item in manyTableData" :key="item.attr_id">
+                    <!-- 复选框 -->
+                    <el-checkbox-group v-model="item.attr_vals">
+                        <el-checkbox :label="value" v-for="(value, index) in item.attr_vals" :key="index" border=""></el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
             </el-tab-pane>
-            <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
-            <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
+            <!-- tab2 -->
+            <el-tab-pane label="商品属性" name="2">
+                <el-form-item :label="item.attr_name" v-for="item in onlyTableData" :key="item.attr_id">
+                   <el-input v-model="item.attr_vals"></el-input>
+                </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane label="商品图片" name="3">
+                <!-- 上传组件 -->
+                <el-upload
+                :action="uploadURL"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                list-type="picture"
+                :headers="headerObj"
+                :on-success="handleSuccess"
+                >
+                <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+            </el-tab-pane>
             <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
         </el-tabs>
         </el-form>
@@ -77,7 +101,9 @@
                     goods_price: 0,
                     goods_weight: 0,
                     goods_number: 0,
-                    goods_cat: []
+                    goods_cat: [],
+                    // 图片上传成功的数组
+                    pics: []
                 },
                 addFormRules: {
                     goods_name:[
@@ -102,7 +128,18 @@
                     value: 'cat_id',
                     children: 'children'
                 },
-                manyTableData: []
+                // 动态参数列表数据
+                manyTableData: [],
+                // 静态属性列表数据
+                onlyTableData: [],
+                // 上传图片的地址
+                uploadURL: 'http://127.0.0.1:8888/api/private/v1/upload',
+                // 上传图片的请求头对象
+                headerObj: {
+                    Authorization:
+                    window.sessionStorage.getItem('token')
+                },
+                
             }
         },
         created () {
@@ -137,9 +174,51 @@
                   if(res.meta.status !== 200){
                       return this.$message.error('获取动态参数列表失败! ')
                   }
+                  console.log(res.data);
+                  res.data.forEach(item => {
+                      item.attr_vals =
+                      item.attr_vals.length === '0' ? []
+                      : item.attr_vals.split(' ')
+                  })
                   this.manyTableData = res.data
                 }
+                else if(this.activeIndex === '2'){
+                  const {data:res} = await this.$http.get(`categories/${this.cateId}/attributes`, {params: {sel: 'only'}})
+                  if(res.meta.status !== 200){
+                      return this.$message.error('获取静态属性列表失败! ')
+                  }
+                  console.log(res.data);
+                  this.onlyTableData = res.data
+                }
+            },
+            // 处理图片预览效果
+            handlePreview(){},
+            // 处理图片移除效果
+            handleRemove(file){
+                // console.log(file);
+                // 1.获取临时路径
+                const filePath = file.response.data.tmp_path
+                // 2.找到对应图片的索引值
+                const index = this.addForm.pics.findIndex(i => 
+                    i.pic === filePath
+                )
+                // 3.用splice方法将删除的图片从数组中移除
+                this.addForm.pics.splice(index, 1)
+                console.log(this.addForm);
+                
+            },
+            // 监听图片上传成功的事件
+            handleSuccess(response){
+                // 1.拼接图片信息对象
+                const picInfo = {
+                    pic: response.data.tmp_path
+                }
+                // 2.放入图片数组中
+                this.addForm.pics.push(picInfo)
+                console.log(this.addForm);
             }
+
+
         },
         computed: {
             cateId() {
@@ -153,5 +232,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+.el-checkbox{
+    margin: 0 10px 0 0 !important; 
+}
 </style>
