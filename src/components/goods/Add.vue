@@ -272,9 +272,9 @@ export default {
     // 添加商品
     add() {
       //   console.log(this.addForm);
-      this.$refs.addFormRef.validate(async (valid) => {
+      this.$refs.addFormRef.validate(async valid => {
         if (!valid) {
-          this.$message.error("请填写必要的表单项! ");
+          return this.$message.error("请填写必要的表单项! ");
         }
         // 执行添加的业务逻辑
         // 级联选择器不允许将数组更改为字符串,所以需要进行深拷贝
@@ -296,13 +296,14 @@ export default {
           };
           this.addForm.attrs.push(newInfo);
         });
+        
         form.attrs = this.addForm.attrs;
         console.log(form);
 
-        // 发起请求,添加商品
+        // 发起请求,添加商品，商品的名称必须是唯一的
         const { data: res } = await this.$http.post("goods", form);
         if (res.meta.status !== 201) {
-          this.$message.error("添加商品失败! ");
+         return this.$message.error("添加商品失败! ");
         }
         this.$message.success("添加商品成功! ");
         this.$router.push("/goods");
