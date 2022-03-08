@@ -38,7 +38,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" icon="el-icon-edit" @click="showBox"></el-button>
-                    <el-button type="success" size="mini" icon="el-icon-location"></el-button>
+                    <el-button type="success" size="mini" icon="el-icon-location" @click="showProgressBox"></el-button>
                 </template>
                 
             </el-table-column>
@@ -62,6 +62,7 @@
     title="修改地址"
     :visible.sync="addressVisible"
     width="50%"
+    @close="addressDialogClosed"
     >
         <el-form :model="addressForm" :rules="addressFormRules" ref="addressFormRef" label-width="100px">
             <el-form-item label="省市区/县" prop="address1">
@@ -75,6 +76,15 @@
         <el-button @click="addressVisible = false">取 消</el-button>
         <el-button type="primary" @click="addressVisible = false">确 定</el-button>
         </span>
+    </el-dialog>
+
+    <!-- 展示物流进度的对话框 -->
+    <el-dialog
+    title="物流进度"
+    :visible.sync="progressVisible"
+    width="50%"
+    >
+    <span>这个物流信息接口出问题了，所以没写!</span>
     </el-dialog>
     </div>
 </template>
@@ -106,7 +116,9 @@ import cityData from './citydata.js'
                         { required: true, message: '请填写详细地址', trigger: 'blur' },
                     ]
                 },
-                cityData
+                cityData,
+                progressVisible: false,
+                progressInfo: []
             }
         },
         created () {
@@ -133,6 +145,13 @@ import cityData from './citydata.js'
             },
             showBox(){
                 this.addressVisible = true
+            },
+            addressDialogClosed(){
+                this.$refs.addressFormRef.resetFields()
+            },
+            // 展示物流进度对话框
+            showProgressBox(){
+                this.progressVisible = true
             }
         },
     }
