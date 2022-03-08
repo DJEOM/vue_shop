@@ -134,7 +134,7 @@
       <!-- 底部按钮区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editDialogClosed">确 定</el-button>
+        <el-button type="primary" @click="editCateInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -206,7 +206,9 @@ export default {
       },
       // 选中的父级分类的id数组
       selectedKeys: [],
-      editForm: {},
+      editForm: {
+        cat_name: ''
+      },
       editDialogVisible: false,
       editCateFormRules: {
         cat_name: [
@@ -296,18 +298,19 @@ export default {
     // 监听修改分类对话框的关闭事件
     async showEditDialog(id) {
       console.log(id);
-      const { data: res } = await this.$http.get("categories/" + id);
+      const { data: res } = await this.$http.get("categories", {params: {id: 'cat_id'}});
       if (res.meta.status !== 200) {
         return this.$message.error("获取分类列表失败");
       }
-      this.editForm = res.data;
+      console.log(res.data);
+      this.editForm = res.data[0]
       this.editDialogVisible = true;
     },
     // 监听修改分类对话框的关闭事件
     editDialogClosed() {
       this.$refs.editFormRef.resetFields();
     },
-    // 点击确定修改角色
+    // 点击确定修改分类
     editCateInfo() {
       this.$refs.editFormRef.validate(async (valid) => {
         if (!valid) return;
@@ -353,7 +356,7 @@ export default {
       }
 
       // 发起请求，完成删除分类操作
-      const { data: res } = await this.$http.delete("categories/" + id);
+      const { data: res } = await this.$http.delete("categories" + 'id');
       if (res.meta.status !== 200) {
         return this.$message.error("删除分类失败!");
       }
