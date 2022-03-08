@@ -265,10 +265,9 @@ export default {
       //   如果selectedKeys数组中的length大于0,说明选中了父级分类
       if (this.selectedKeys.length > 0) {
         //  父级分类的id
-        this.addCateForm.cat_pid =
-          this.selectedKeys[this.selectedKeys.length - 1];
+        this.addCateForm.cat_pid = this.selectedKeys[this.selectedKeys.length - 1];
         //  为当前分类的等级赋值
-        this, (this.addCateForm.cat_level = this.selectedKeys.length);
+        this.addCateForm.cat_level = this.selectedKeys.length;
         return;
       } else {
         //   父级分类的id

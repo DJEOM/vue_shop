@@ -53,8 +53,7 @@
                   <el-col :span="18">
                     <el-tag
                       type="warning"
-                      :class="[i3 === 0 ? '' : 'bdtop']"
-                      v-for="(item3, i3) in item2.children"
+                      v-for="item3 in item2.children"
                       :key="item3.id"
                       closable
                       @close="removeRightById(scope.row, item3.id)"
