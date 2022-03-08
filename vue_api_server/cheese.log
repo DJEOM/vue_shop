@@ -401,3 +401,11 @@
 [2022-03-08T09:42:59.547] [DEBUG] cheese - admin
 [2022-03-08T09:42:59.555] [DEBUG] cheese - null
 [2022-03-08T09:42:59.556] [DEBUG] cheese - null
+[2022-03-08T10:43:15.360] [DEBUG] cheese - login => username:admin,password:123456
+[2022-03-08T10:43:15.363] [DEBUG] cheese - admin
+[2022-03-08T10:43:15.398] [DEBUG] cheese - null
+[2022-03-08T10:43:15.399] [DEBUG] cheese - null
+[2022-03-08T11:30:11.935] [DEBUG] cheese - login => username:admin,password:123456
+[2022-03-08T11:30:11.936] [DEBUG] cheese - admin
+[2022-03-08T11:30:12.047] [DEBUG] cheese - null
+[2022-03-08T11:30:12.047] [DEBUG] cheese - null
